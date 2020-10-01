@@ -48,19 +48,24 @@ def date_check(date):
     return True
 
 
-inp = list()
-while 1 < len(sys.argv) < 3 and 0 <= len(inp) < 2:
-    print("input format: "
-          "currency code date{yyyy-mm-dd}", "\n"
-          "example: eur 2020-01-01", "\n"
-          "program has data from 01-07-1992")
-    inp = input().split()
-else:
-    if 2 < len(sys.argv):
-        inp.append(sys.argv[1])
-        inp.append(sys.argv[2])
-currency = inp[0]
-date = inp[1]  # y-m-d
+if len(sys.argv) == 1 or sys.argv[1] == "-h" or sys.argv[1] == "-a":
+    print(
+        "usage: currency.py [valute code] [date: <format{yyyy-mm-dd}>]", "\n",
+        "usage example: eur 2020-01-01", "\n",
+        "this script has data from 1992-07-01", "\n",
+        "other arguments: [-h] [-a] [-ec] [-exit_codes]", sep=""
+          )
+    sys.exit("exit code: 3")
+elif sys.argv[1] == "-exit_codes" or sys.argv[1] == "-ec":
+    print(
+        "exit code 0: success", "\n",
+        "exit code 1: currency-code format error", "\n",
+        "exit code 2: date error(not in data base or date in future)", "\n",
+        "exit code 3: references", sep=""
+    )
+    sys.exit("exit code: 3")
+currency = sys.argv[1]
+date = sys.argv[2] # y-m-d
 if date_check(date):
     lst = date.split("-")  # d/m/y
     lst[0], lst[2] = lst[2], lst[0]  # swap day and year for cbr format
@@ -70,10 +75,10 @@ if date_check(date):
     if currency.upper() in html:
         print(f"Курс рубля к {currency.upper()} на {date}: "
               f"{html[html.find('Value', html.find(currency.upper())) + 6:html.find('Value',html.find(currency.upper())) + 13]}")
-        sys.exit(0)
+        sys.exit("exit code: 0")
     else:
         print(f"error: currency({currency}) not found")
-        sys.exit(1)
+        sys.exit("exit code: 1")
 else:
-    print("error: date format")
-    sys.exit(2)
+    print("error: date input")
+    sys.exit("exit code: 2")
