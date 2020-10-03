@@ -32,19 +32,18 @@ def days_in_month(month, year):
 
 def date_check(date):
     date = date.split("-")
-    for i in range(len(date)):
-        date[i] = int(date[i])
-        if i == 0:
-            if date[i] // 1000 == 0 or date[i] > time.time() // 31536000 + 1970 or date[i] <= 1991:
-                return False
-        elif i == 1:
-            if days_in_month(date[1], date[0]) == False or (date[0] == 1992 and date[1] < 7) or (int(time.strftime("%D", time.localtime())[0:2]) < date[i]):
-                return False
-        elif i == 2:
-            if days_in_month(date[1], date[0]) < date[i] or date[i] < 0 or (int(time.strftime("%D", time.localtime())[3:5]) < date[i]):
-                return False
-        else:
+    if len(date) == 3:
+        date[0] = int(date[0])
+        date[1] = int(date[1])
+        date[2] = int(date[2])
+        if date[0] // 1000 == 0 or date[0] > time.time() // 31536000 + 1970 or date[0] <= 1991:
             return False
+        if days_in_month(date[1], date[0]) == False or (date[0] == 1992 and date[1] < 7) or (int(time.strftime("%D", time.localtime())[0:2]) < date[1]):
+            return False
+        if days_in_month(date[1], date[0]) < date[2] or date[2] < 0 or (int(time.strftime("%D", time.localtime())[3:5]) < date[2]):
+            return False
+    else:
+        return False
     return True
 
 
