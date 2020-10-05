@@ -64,7 +64,7 @@ elif sys.argv[1] == "-exit_codes" or sys.argv[1] == "-ec":
     )
     sys.exit("exit code: 3")
 currency = sys.argv[1]
-date = sys.argv[2] # y-m-d
+date = sys.argv[2]  # y-m-d
 if date_check(date):
     lst = date.split("-")  # d/m/y
     lst[0], lst[2] = lst[2], lst[0]  # swap day and year for cbr format
