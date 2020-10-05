@@ -12,14 +12,17 @@ def date_check(date):    #we just need to check if date in range [1992-07-01;<to
 
     year = int(datetime.today().strftime("%Y"))
     month = int(datetime.today().strftime("%m"))
+    date[0] = int(date[0])
+    date[1] = int(date[1])
+    date[2] = int(date[2])
 
-    if int(date[0]) > int(datetime.today().strftime("%d")) and int(date[2]) == year and int(date[1]) == month:
+    if date[0] > int(datetime.today().strftime("%d")) and date[2] == year and date[1] == month:
         return False
 
-    if (int(date[1]) > month and int(date[2]) == year) or (int(date[2]) == 1992 and int(date[1]) < 7):
+    if (date[1] > month and date[2] == year) or (date[2] == 1992 and date[1] < 7):
         return False
 
-    if int(date[2]) < 1992 or int(date[2]) > year:
+    if date[2] < 1992 or date[2] > year:
         return False
 
     return True
@@ -61,7 +64,9 @@ else:
 
 currency = sys.argv[1].upper()
 
-if date_check(date):
+lst = date.copy()
+
+if date_check(lst):
     date = "/".join(date)  # date for cbr
     url = "http://www.cbr.ru/scripts/XML_daily.asp?date_req=" + date
     html = str(urllib.request.urlopen(url).read())
