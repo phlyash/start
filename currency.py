@@ -10,6 +10,9 @@ def EXIT(message, exit_code):
 
 def date_check(date):    #we just need to check if date in range [1992-07-01;<today>] dmy
 
+    lst[0] = int(lst[0])
+    lst[1] = int(lst[1])
+    lst[2] = int(lst[2])
     today = datetime.today()
 
     if date[0] > today.day and date[2] == today.year and date[1] == today.month:
