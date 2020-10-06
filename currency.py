@@ -10,19 +10,15 @@ def EXIT(message, exit_code):
 
 def date_check(date):    #we just need to check if date in range [1992-07-01;<today>] dmy
 
-    year = int(datetime.today().strftime("%Y"))
-    month = int(datetime.today().strftime("%m"))
-    date[0] = int(date[0])
-    date[1] = int(date[1])
-    date[2] = int(date[2])
+    today = datetime.today()
 
-    if date[0] > int(datetime.today().strftime("%d")) and date[2] == year and date[1] == month:
+    if date[0] > today.day and date[2] == today.year and date[1] == today.month:
         return False
 
-    if (date[1] > month and date[2] == year) or (date[2] == 1992 and date[1] < 7):
+    if (date[1] > today.month and date[2] == today.year) or (date[2] == 1992 and date[1] < 7):
         return False
 
-    if date[2] < 1992 or date[2] > year:
+    if date[2] < 1992 or date[2] > today.year:
         return False
 
     return True
