@@ -12,9 +12,9 @@ def date_check(dateinp):
     min_date = datetime(1992, 7, 1)
     max_date = datetime.today()
 
-    if min_date >= dateinp or max_date <= dateinp:
-        return False
-    return True
+    if min_date <= dateinp <= max_date:
+        return True
+    return False
 
 
 EXIT_SUCCESS = 0
