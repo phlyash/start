@@ -55,3 +55,26 @@ print(
 ### 3. Поиск данных в файле
 
 Получение конкретных данных из файла с курсами валют на данном этапе можно выполнить с использованием поиска подстроки в строке (функция find() подойдет).
+
+### 4. Тестирование
+
+Для тестирования функции парсинга ответа XML API, можно использовать следующий документ:
+```xml
+<?xml version="1.0" encoding="windows-1251"?>
+<ValCurs Date="02.03.2002" name="Foreign Currency Market">
+    <Valute ID="R01010">
+        <NumCode>036</NumCode>
+        <CharCode>AUD</CharCode>
+        <Nominal>1</Nominal>
+        <Name>Австралийский доллар</Name>
+        <Value>16,0102</Value>
+    </Valute>
+    <Valute ID="R01235"
+        ><NumCode>840</NumCode>
+        <CharCode>USD</CharCode>
+        <Nominal>1</Nominal>
+        <Name>Доллар США</Name>
+        <Value>30,9436</Value>
+    </Valute>
+</ValCurs>
+```
