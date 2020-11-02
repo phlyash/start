@@ -4,9 +4,14 @@ from datetime import datetime
 import os
 
 
-def download():
-    return open(XML_PATH).read()
+XML_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    "xml.txt"
+)
 
+
+def download(date):
+    return open(XML_PATH).read()
 
 
 class CurrencyTest(unittest.TestCase):
@@ -45,8 +50,10 @@ class CurrencyTest(unittest.TestCase):
     def test_parse_false_valute_code(self):
         with open(XML_PATH) as f:
             html = f.read()
-        result = currency.parse(html, "zxc", False)
-        self.assertEqual(result, currency.CURRENCY_ERROR)
+        with self.assertRaises(ValueError) as e:
+            currency.parse(html, "zxc", False)
+        exception = str(e.exception)
+        self.assertEqual(exception, "Currency not found")
 
     def test_main_true(self):
         args = ["path", "usd", "2002-03-02"]
@@ -88,11 +95,6 @@ class CurrencyTest(unittest.TestCase):
         result = currency.main(args, download)
         self.assertEqual(result, currency.INPUT_ERROR)
 
-
-XML_PATH = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    "xml.txt"
-)
 
 if __name__ == "__main__":
     unittest.main()
