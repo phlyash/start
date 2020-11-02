@@ -11,7 +11,9 @@ XML_PATH = os.path.join(
 
 
 def download(date):
-    return open(XML_PATH).read()
+    with open(XML_PATH) as f:
+        file = f.read()
+    return file
 
 
 class CurrencyTest(unittest.TestCase):
