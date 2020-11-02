@@ -1,6 +1,12 @@
 import currency
 import unittest
 from datetime import datetime
+import os
+
+
+def download():
+    return open(XML_PATH).read()
+
 
 
 class CurrencyTest(unittest.TestCase):
@@ -10,11 +16,13 @@ class CurrencyTest(unittest.TestCase):
         self.assertEqual(result, True)
 
     def test_less_date_check(self):
-        result = currency.date_check("1992-06-20")
+        result = currency.date_check("1992-06-30")
         self.assertEqual(result, False)
 
     def test_higher_date_check(self):
-        date = str(datetime.today().year) + '-' + str(datetime.today().month) + '-' + str(datetime.today().day + 1)
+        date = datetime.today()
+        date = date.replace(day=date.day+1)
+        date = date.strftime("%Y-%m-%d")
         result = currency.date_check(date)
         self.assertEqual(result, False)
 
@@ -23,63 +31,68 @@ class CurrencyTest(unittest.TestCase):
         self.assertEqual(result, False)
 
     def test_parse(self):
-        html = open("F:/project/start/xml.txt")
-        result = currency.parse(html.read(), "usd", False)
-        html.close()
+        with open(XML_PATH) as f:
+            html = f.read()
+        result = currency.parse(html, "usd", False)
         self.assertEqual(result, "30.9436")
 
     def test_parse_parse_reversed(self):
-        html = open("F:/project/start/xml.txt")
-        result = currency.parse(html.read(), "usd", True)
-        html.close()
+        with open(XML_PATH) as f:
+            html = f.read()
+        result = currency.parse(html, "usd", True)
         self.assertEqual(result, "0.0323")
 
     def test_parse_false_valute_code(self):
-        html = open("F:/project/start/xml.txt")
-        result = currency.parse(html.read(), "zxc", False)
-        html.close()
-        self.assertEqual(result, "cant find currency")
+        with open(XML_PATH) as f:
+            html = f.read()
+        result = currency.parse(html, "zxc", False)
+        self.assertEqual(result, currency.CURRENCY_ERROR)
 
     def test_main_true(self):
-        args = ["path", "eur", "2020-01-01"]
-        result = currency.main(args)
-        self.assertEqual(result, 0)
+        args = ["path", "usd", "2002-03-02"]
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.EXIT_SUCCESS)
 
     def test_main_reversed_true(self):
-        args = ["path", "eur", "2020-01-01"]
-        result = currency.main(args)
-        self.assertEqual(result, 0)
+        args = ["path", "usd", "2002-03-02"]
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.EXIT_SUCCESS)
 
     def test_noargs(self):
         args = ["path"]
-        result = currency.main(args)
-        self.assertEqual(result, 3)
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.EXIT_REFERENCE)
 
     def test_help(self):
         args = ["path", "-h"]
-        result = currency.main(args)
-        self.assertEqual(result, 3)
-
-    def test_usage_help(self):
-        args = ["path", "-u"]
-        result = currency.main(args)
-        self.assertEqual(result, 3)
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.EXIT_REFERENCE)
 
     def test_exit_codes_help(self):
         args = ["path", "-e"]
-        result = currency.main(args)
-        self.assertEqual(result, 3)
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.EXIT_REFERENCE)
 
     def test_main_date_error(self):
         args = ["path", "eur", "2019-13-10"]
-        result = currency.main(args)
-        self.assertEqual(result, 2)
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.DATE_ERROR)
 
     def test_main_currency_error(self):
         args = ["path", "zxc", "2020-01-01"]
-        result = currency.main(args)
-        self.assertEqual(result, 1)
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.CURRENCY_ERROR)
 
+    def test_main_1_argument(self):
+        args = ["path", "eur"]
+        result = currency.main(args, download)
+        self.assertEqual(result, currency.INPUT_ERROR)
+
+
+XML_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    "xml.txt"
+)
 
 if __name__ == "__main__":
     unittest.main()
